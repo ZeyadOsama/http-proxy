@@ -61,13 +61,15 @@ class Cache:
         self.__cache = dict()
 
     def check(self, response):
-        url = response.requested_host + response.requested_path
-        if url in self.__cache.keys():
-            return self.__cache[url]
+        if response.requested_host is not None and response.requested_path is not None:
+            url = response.requested_host + response.requested_path
+            if url in self.__cache.keys():
+                return self.__cache[url]
         return None
 
     def cache(self, response, r):
-        self.__cache[response.requested_host + response.requested_path] = r
+        if response.requested_host is not None and response.requested_path is not None:
+            self.__cache[response.requested_host + response.requested_path] = r
 
 
 class HttpRequestState(enum.Enum):
@@ -220,15 +222,18 @@ def setup_sockets(proxy_port_number):
     return proxy_socket
 
 
-def start(s: socket):
+def start(proxy_socket: socket):
     cache = Cache()
-    while True:
-        client, address = s.accept()
-        threading.Thread(target=client_handler, args=(client, address, cache)).start()
+    try:
+        while True:
+            client, address = proxy_socket.accept()
+            threading.Thread(target=client_handler, args=(client, address, cache)).start()
+    except KeyboardInterrupt:
+        proxy_socket.close()
 
 
 def client_handler(client: socket, address, c: Cache):
-    proxy_response = http_request_pipeline(address, receive_request(client))
+    proxy_response = http_request_pipeline(address, receive_client_request(client))
     if isinstance(proxy_response, HttpErrorResponse):
         client.sendto(proxy_response.to_byte_array(proxy_response.to_http_string()), address)
     else:
@@ -242,23 +247,38 @@ def client_handler(client: socket, address, c: Cache):
     client.close()
 
 
-def receive_request(s: socket) -> str:
+def receive_client_request(s: socket) -> str:
     request = ""
     while request.find(Constants.Delimiters.RQ_ENDING) == -1:
-        request = http_request_decode(s.recv(Constants.MAX_RECEIVE))
+        request += http_request_decode(s.recv(Constants.MAX_RECEIVE))
     return request
 
 
-def server_handler(response: HttpRequestInfo) -> list:
-    server_response = []
+def server_handler(response: HttpRequestInfo):
+    server_socket = setup_server_socket(response)
+    if server_socket is None:
+        return
+    return receive_server_response(server_socket, response)
+
+
+def setup_server_socket(response: HttpRequestInfo) -> socket:
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.connect((socket.gethostbyname(response.requested_host), response.requested_port))
-    server_socket.send(response.to_byte_array(response.to_http_string()))
-    received_data = server_socket.recv(Constants.MAX_RECEIVE)
+    try:
+        ip = socket.gethostbyname(response.requested_host)
+    except TypeError or TimeoutError:
+        return None
+    server_socket.connect((ip, response.requested_port))
+    return server_socket
+
+
+def receive_server_response(s: socket, response: HttpRequestInfo) -> list:
+    s.send(response.to_byte_array(response.to_http_string()))
+    received_data = s.recv(Constants.MAX_RECEIVE)
+    server_response = []
     while len(received_data) > 0:
         server_response.append(received_data)
-        received_data = server_socket.recv(Constants.MAX_RECEIVE)
-    server_socket.close()
+        received_data = s.recv(Constants.MAX_RECEIVE)
+    s.close()
     return server_response
 
 
@@ -342,15 +362,12 @@ def parse_PHH(request):
 def parse_header(header) -> list:
     h: list = header.split(Constants.Delimiters.HOST)
     h = [i.strip() if type(i) == str else str(i) for i in h]
-    if h.__len__() is not 2:
-        print(f'[VERBOSE] Expected 2 elements for header but got {h.__len__()} instead.')
-        exit(-1)
     return h
 
 
 def parse_host_port(header: list):
     hp: list = header[1].split(Constants.Delimiters.HOST)
-    return hp[0], int(hp[1]) if len(hp) > 2 else Constants.DEF_PORT
+    return hp[0], (int(hp[1]) if len(hp) > 2 else Constants.DEF_PORT)
 
 
 def split_http_request(http_request: str):

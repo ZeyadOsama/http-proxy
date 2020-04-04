@@ -1,7 +1,6 @@
 import sys
 from lab2_skeleton import check_http_request_validity, parse_http_request, HttpRequestState, HttpRequestInfo
 
-
 #######################################
 # Leave the code below as is. (Tests)
 # Read them to know how your classes
@@ -30,8 +29,8 @@ def simple_http_parsing_test_cases():
 
     actual_value = parsed.method
     correct_value = "GET"
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -40,10 +39,10 @@ def simple_http_parsing_test_cases():
 
     # "Host: google.com" header is added to the request.
     # note that the ":" is removed.
-    actual_value = parsed.headers[0]  # note: headers is a list of lists
+    actual_value = parsed.headers[0]        # note: headers is a list of lists
     correct_value = ["Host", "www.google.com"]
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -52,8 +51,8 @@ def simple_http_parsing_test_cases():
 
     correct_value = "/"
     actual_value = parsed.requested_path
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -62,8 +61,8 @@ def simple_http_parsing_test_cases():
 
     correct_value = str(80)
     actual_value = str(parsed.requested_port)
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -72,8 +71,8 @@ def simple_http_parsing_test_cases():
 
     actual_value = parsed.requested_host
     correct_value = "www.google.com"
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -84,8 +83,8 @@ def simple_http_parsing_test_cases():
 
     actual_value = parsed.requested_path
     correct_value = "/"
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -94,8 +93,8 @@ def simple_http_parsing_test_cases():
 
     actual_value = parsed.headers[0]
     correct_value = ["Host", "www.google.com"]
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -108,8 +107,8 @@ def simple_http_parsing_test_cases():
 
     actual_value = str(len(parsed.headers))
     correct_value = str(2)
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -127,8 +126,8 @@ def simple_http_parsing_test_cases():
 
     correct_value = http_string
     actual_value = req.to_http_string()
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -144,8 +143,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.GOOD
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -157,8 +156,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.INVALID_INPUT
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -170,8 +169,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.NOT_SUPPORTED
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -183,8 +182,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.INVALID_INPUT
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -195,8 +194,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.INVALID_INPUT
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
@@ -207,21 +206,20 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.INVALID_INPUT
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value, actual_value)
     print(f"[success] {case}")
 
     #######################################
     #######################################
-
     case = "GET request with full URL in path returns GOOD"
     req_str = "GET http://google.com/ HTTP/1.0\r\n\r\n"
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.GOOD
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value.name, actual_value.name)
     print(f"[success] {case}")
 
@@ -233,8 +231,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.GOOD
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value.name, actual_value.name)
     print(f"[success] {case}")
 
@@ -246,8 +244,8 @@ def simple_http_validation_test_cases():
 
     actual_value = check_http_request_validity(req_str)
     correct_value = HttpRequestState.INVALID_INPUT
-    assert correct_value == actual_value, \
-        f"[Line {lineno()}] [failed] {case}" \
+    assert correct_value == actual_value,\
+        f"[Line {lineno()}] [failed] {case}"\
         " Expected ( %s ) got ( %s )" % (correct_value.name, actual_value.name)
     print(f"[success] {case}")
 
