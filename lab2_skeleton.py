@@ -539,23 +539,6 @@ def get_arg(param_index, default=None):
             exit(-1)  # Program execution failed.
 
 
-def check_file_name():
-    """
-    Checks if this file has a valid name for *submission*
-
-    leave this function and as and don't use it. it's just
-    to notify you if you're submitting a file with a correct
-    name.
-    """
-    script_name = os.path.basename(__file__)
-    import re
-    matches = re.findall(r"(\d{4}_){,2}lab2\.py", script_name)
-    if not matches:
-        print(f"[WARN] File name is invalid [{script_name}]")
-    else:
-        print(f"[LOG] File name is correct.")
-
-
 def main():
     """
     Please leave the code in this function as is.
@@ -566,7 +549,6 @@ def main():
     print("\n\n")
     print("*" * 50)
     print(f"[LOG] Printing command line arguments [{', '.join(sys.argv)}]")
-    check_file_name()
     print("*" * 50)
 
     # This argument is optional, defaults to 18888
